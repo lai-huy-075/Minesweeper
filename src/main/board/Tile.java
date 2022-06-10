@@ -2,12 +2,14 @@ package main.board;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Objects;
+import java.awt.Image;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.UIManager;
+
+import main.Minesweeper;
 
 /**
  * This {@code Tile} class represents a Tile on {@link Board}.
@@ -50,25 +52,52 @@ public class Tile extends JButton {
 
     static {
 	UIManager.put("TextArea.font", new Font("Arial", Font.PLAIN, 30));
-	Tile.numbers[1] = new ImageIcon("./src/resources/one.png");
-	Tile.numbers[2] = new ImageIcon("./src/resources/two.png");
-	Tile.numbers[3] = new ImageIcon("./src/resources/three.png");
-	Tile.numbers[4] = new ImageIcon("./src/resources/four.png");
-	Tile.numbers[5] = new ImageIcon("./src/resources/five.png");
-	Tile.numbers[6] = new ImageIcon("./src/resources/six.png");
-	Tile.numbers[7] = new ImageIcon("./src/resources/seven.png");
-	Tile.numbers[8] = new ImageIcon("./src/resources/eight.png");
-	bomb = new ImageIcon("./src/resource/bomb.png");
-	incorrectFlag = new ImageIcon("./src/resource/incorrectFlag.png");
-	flag = new ImageIcon("./src/resource/flag.png");
-    }
 
-    /**
-     * The {@link Panel} holding this.
-     */
-    @SuppressWarnings("unused")
-    @Deprecated
-    private final Panel panel;
+	for (int i = 1; i < 9; ++i) {
+	    String number;
+
+	    switch (i) {
+	    case 1:
+		number = "one";
+		break;
+	    case 2:
+		number = "two";
+		break;
+	    case 3:
+		number = "three";
+		break;
+	    case 4:
+		number = "four";
+		break;
+	    case 5:
+		number = "five";
+		break;
+	    case 6:
+		number = "six";
+		break;
+	    case 7:
+		number = "seven";
+		break;
+	    case 8:
+		number = "eight";
+		break;
+	    default:
+		number = null;
+		break;
+	    }
+
+	    Image image = new ImageIcon("./src/resources/" + number + ".png").getImage().getScaledInstance(32, 32,
+		    Image.SCALE_SMOOTH);
+	    Tile.numbers[i] = new ImageIcon(image);
+	}
+
+	bomb = new ImageIcon(
+		new ImageIcon("./src/resources/bomb.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+	incorrectFlag = new ImageIcon(new ImageIcon("./src/resources/incorrectFlag.png").getImage().getScaledInstance(32,
+		32, Image.SCALE_SMOOTH));
+	flag = new ImageIcon(
+		new ImageIcon("./src/resources/flag.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+    }
 
     /**
      * The row that this is in.
@@ -110,7 +139,6 @@ public class Tile extends JButton {
     public Tile(Panel panel, int row, int col) {
 	super(null, null);
 
-	this.panel = Objects.requireNonNull(panel, "Tile must be on MinesweeperPanel");
 	this.row = row;
 	this.col = col;
 
@@ -128,24 +156,10 @@ public class Tile extends JButton {
     }
 
     /**
-     * @return {@link #col}
-     */
-    public int getCol() {
-	return this.col;
-    }
-
-    /**
      * @return {@link #count}
      */
     public int getCount() {
 	return this.count;
-    }
-
-    /**
-     * @return {@link #row}
-     */
-    public int getRow() {
-	return this.row;
     }
 
     /**
@@ -225,10 +239,12 @@ public class Tile extends JButton {
      */
     public void toggleFlagged() {
 	this.isFlagged ^= true;
+	this.setIcon(this.isFlagged ? Tile.flag : null);
+	Minesweeper.logger.info("Flagged set to:\t" + this.isFlagged);
     }
 
     @Override
     public String toString() {
-	return String.format("(%s, %s)", String.valueOf(this.row), String.valueOf(this.col));
+	return String.format("(%d, %d)", this.row, this.col);
     }
 }

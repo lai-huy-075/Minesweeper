@@ -3,9 +3,9 @@ package main.board;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,133 +16,17 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 import main.Minesweeper;
+import main.listener.Key;
+import main.listener.Mouse;
 
 /**
- * This {@code MinesweeperPanel} class holds all intractable and GUI elements
- * of {@link Minesweeper}.
+ * This {@code MinesweeperPanel} class holds all intractable and GUI elements of
+ * {@link Minesweeper}.
  * 
  * @version 3 April 2020
  * @author MrPineapple065
  */
-public class Panel extends JPanel {
-    /**
-     * This {@code MenuButton} class just helps create a button that opens a menu.
-     * 
-     * @version 18 March 2020
-     * @author MrPineapple065
-     */
-    public static class MenuButton extends JButton implements ActionListener {
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = 0x3EEF5D22FB602996L;
-
-	/**
-	 * A {@link ImageIcon} holding the default {@code ImageIcon}
-	 */
-	public static final ImageIcon menuDefault;
-
-	/**
-	 * A {@link ImageIcon} holding the {@code ImageIcon} to display when
-	 * {@code Mouse} is pressed.
-	 */
-	public static final ImageIcon menuClick;
-
-	/**
-	 * A {@link ImageIcon} holding the {@code ImageIcon} to display when the game is
-	 * over.
-	 */
-	public static final ImageIcon menuGameOver;
-
-	static {	
-	    menuDefault = new ImageIcon("./src/resource/menuDefault.png");
-	    menuClick = new ImageIcon("./src/resource/menuClick.png");
-	    menuGameOver = new ImageIcon("./src/resource/menuGameOver.png");
-	}
-	
-	/**
-	 * The {@link Panel} holding this.
-	 */
-	private final Panel panel;
-
-	/**
-	 * Create {@code MenuButton} on {@code panel}
-	 * 
-	 * @param panel is the {@link Panel} that this button will be placed on.
-	 */
-	public MenuButton(Panel panel) {
-	    super();
-	    this.panel = Objects.requireNonNull(panel, "MenuButton must be on a MinesweerPanel");
-	    this.reset();
-	    this.setHorizontalAlignment(JButton.CENTER);
-	    this.setVerticalAlignment(JButton.CENTER);
-	    this.setFocusPainted(false);
-	    this.addActionListener(this);
-	    this.setOpaque(false);
-	    this.setContentAreaFilled(false);
-	    this.setVisible(true);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	    switch (JOptionPane.showOptionDialog(null, "Pick an option", "Menu", JOptionPane.DEFAULT_OPTION,
-		    JOptionPane.PLAIN_MESSAGE, null, new String[] { "Reset", "Quit", "Controls" }, 2)) {
-	    case 0:
-		if (this.panel.board.getGameOver()) {
-		    this.reset();
-		    this.panel.board.reset();
-		    return;
-		} else {
-		    switch (JOptionPane.showConfirmDialog(null, "Are you sure you want to reset?", "",
-			    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null)) {
-		    case JOptionPane.YES_OPTION:
-			this.reset();
-			this.panel.board.reset();
-		    default:
-			return;
-		    }
-		}
-	    case 1:
-		switch (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "",
-			JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null)) {
-		case JOptionPane.YES_OPTION:
-		    System.exit(0);
-		default:
-		    return;
-		}
-	    case 2:
-		JTextArea jta = new JTextArea("Escape:\tPause\nr:\tReset\nq:\tQuit");
-		jta.setOpaque(false);
-		jta.setFont(new Font("Arial", Font.PLAIN, 20));
-		JOptionPane.showMessageDialog(null, jta, "Controls", JOptionPane.PLAIN_MESSAGE, null);
-		return;
-	    default:
-		return;
-	    }
-	}
-
-	/**
-	 * Change the icon displyed to {@link #menuClick}
-	 */
-	public void click() {
-	    this.setIcon(menuClick);
-	}
-
-	/**
-	 * Change the icon displayed to {@link #menuGameOver}
-	 */
-	public void gameOver() {
-	    this.setIcon(menuGameOver);
-	}
-
-	/**
-	 * Change the icon displayed to {@link #menuDefault}
-	 */
-	public void reset() {
-	    this.setIcon(menuDefault);
-	}
-    }
-
+public class Panel extends JPanel implements ActionListener {
     /**
      * serialVersionUID
      */
@@ -151,27 +35,67 @@ public class Panel extends JPanel {
     /**
      * The standard {@link Font}.
      */
-    private static final Font standardFont = new Font("Arial", Font.PLAIN, 30);
+    public static final Font standardFont = new Font("Arial", Font.PLAIN, 30);
 
     /**
      * {@link MenuButton}
      */
-    public final MenuButton menu;
+    public static final JButton menu;
+
+    /**
+     * A {@link ImageIcon} holding the default {@code ImageIcon}
+     */
+    public static final ImageIcon menuDefault;
+
+    /**
+     * A {@link ImageIcon} holding the {@code ImageIcon} to display when
+     * {@code Mouse} is pressed.
+     */
+    public static final ImageIcon menuClick;
+
+    /**
+     * A {@link ImageIcon} holding the {@code ImageIcon} to display when the game is
+     * over.
+     */
+    public static final ImageIcon menuGameOver;
+
+    /**
+     * {@link Key} for this
+     */
+    public final Key keys;
 
     /**
      * A {@link JLabel} used to indicate {@link Board#getFlags()}
      */
-    private final JLabel flagLabel = new JLabel("", JLabel.CENTER);
+    public final JLabel flagLabel = new JLabel("", JLabel.CENTER);
 
     /**
      * A {@link JLabel} used to indicate {@link Board#timer}
      */
-    private final JLabel timeLabel = new JLabel("0", JLabel.CENTER);
+    public final JLabel timeLabel = new JLabel("0", JLabel.CENTER);
+    
+    /**
+     * Primitive type array of {@link String} of options
+     */
+    private static final String[] options = { "Reset", "Quit", "Controls" };
 
     /**
      * The actual {@link Board}
      */
-    private final Board board;
+    public final Board board;
+
+    static {
+	menuDefault = new ImageIcon(new ImageIcon("./src/resources/menuDefault.png").getImage().getScaledInstance(32, 32,
+		Image.SCALE_SMOOTH));
+	menuClick = new ImageIcon(
+		new ImageIcon("./src/resources/menuClick.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+	menuGameOver = new ImageIcon(new ImageIcon("./src/resources/menuGameOver.png").getImage().getScaledInstance(32,
+		32, Image.SCALE_SMOOTH));
+
+	menu = new JButton(menuDefault);
+	menu.setOpaque(false);
+	menu.setContentAreaFilled(false);
+    }
 
     /**
      * Create a {@link Panel} with {@code row} number of rows, <br>
@@ -207,11 +131,17 @@ public class Panel extends JPanel {
 	UIManager.put("Label.background", null);
 	UIManager.put("Label.foreground", Color.BLACK);
 
-	this.menu = new MenuButton(this);
+	this.keys = new Key(this);
 
 	// Create other GUI Elements
 	this.createLabels();
 	this.createTiles();
+    }
+    
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+	Minesweeper.logger.info(e.getActionCommand());
+	this.displayMenu();
     }
 
     /**
@@ -219,15 +149,15 @@ public class Panel extends JPanel {
      */
     private void createLabels() {
 	Minesweeper.logger.info("Creaing Labels");
-	
+
 	this.updateBLabel();
-	int colMax = this.board.getColMax();
-	for (int i = 0; i < colMax; i++) {
-	    if (i == colMax / 4)
+
+	for (int i = 0; i < this.board.colMax; i++) {
+	    if (i == this.board.colMax / 4)
 		this.add(this.flagLabel);
-	    else if (i == colMax / 2)
-		this.add(menu);
-	    else if (i == 3 * colMax / 4)
+	    else if (i == this.board.colMax / 2)
+		this.add(Panel.menu);
+	    else if (i == 3 * this.board.colMax / 4)
 		this.add(this.timeLabel);
 	    else
 		this.add(new JLabel("", JLabel.CENTER));
@@ -239,12 +169,53 @@ public class Panel extends JPanel {
      */
     private void createTiles() {
 	Minesweeper.logger.info("Creaing tiles");
-	
+
 	for (Tile[] row : this.board.getBoard()) {
 	    for (Tile tile : row) {
+		tile.addKeyListener(this.keys);
+		tile.addMouseListener(new Mouse(this, this.board, tile));
+
 		this.add(tile);
 	    }
 	}
+    }
+
+    public void displayMenu() {
+	switch (JOptionPane.showOptionDialog(this, "Pick an option", "Menu", JOptionPane.DEFAULT_OPTION,
+		    JOptionPane.PLAIN_MESSAGE, Minesweeper.icon, options, "Reset")) {
+	    case 0:
+		if (this.board.getGameOver()) {
+		    menu.setIcon(menuDefault);
+		    this.board.reset();
+		    return;
+		} else {
+		    switch (JOptionPane.showConfirmDialog(this, "Are you sure you want to reset?", "",
+			    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, Minesweeper.icon)) {
+		    case JOptionPane.YES_OPTION:
+			menu.setIcon(menuDefault);
+			this.board.reset();
+		    default:
+			return;
+		    }
+		}
+	    case 1:
+		switch (JOptionPane.showConfirmDialog(this, "Are you sure you want to quit?", "",
+			JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, Minesweeper.icon)) {
+		case JOptionPane.YES_OPTION:
+		    System.exit(0);
+		    return;
+		default:
+		    return;
+		}
+	    case 2:
+		JTextArea jta = new JTextArea("Escape:\tPause\nr:\tReset\nq:\tQuit");
+		jta.setOpaque(false);
+		jta.setFont(Panel.standardFont);
+		JOptionPane.showMessageDialog(this, jta, "Controls", JOptionPane.PLAIN_MESSAGE, Minesweeper.icon);
+		return;
+	    default:
+		return;
+	    }
     }
 
     /**

@@ -33,12 +33,12 @@ public class Minesweeper {
      * {@link Logger}
      */
     public static final Logger logger;
-    
+
     /**
      * Primitive type array of {@link String} to chose a difficulty from.
      */
     private static final String[] options = { "Easy", "Medium", "Hard", "Custom", "Cancel" };
-    
+
     /**
      * {@link ImageIcon} for the {@link JFrame}
      */
@@ -48,7 +48,7 @@ public class Minesweeper {
      * {@link Image} of {@link #icon}
      */
     public static final Image icon_image;
-    
+
     static {
 	FileHandler file = null;
 	try {
@@ -59,16 +59,16 @@ public class Minesweeper {
 	    Minesweeper.logger.throwing("Chess", "static", e);
 	}
 	file.setFormatter(new CustomFormatter());
-	
+
 	logger = Logger.getLogger("Chess");
 	logger.setLevel(Level.ALL);
 	logger.setUseParentHandlers(false);
 	logger.addHandler(file);
-	
-	icon = new ImageIcon("./src/resources/icon.ico");
+
+	icon = new ImageIcon("./src/resources/icon.png");
 	icon_image = icon.getImage();
     }
-    
+
     /**
      * Main method
      * 
@@ -79,11 +79,15 @@ public class Minesweeper {
 	frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 	Panel panel = null;
-	
+
 	final int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "", JOptionPane.OK_OPTION,
 		JOptionPane.PLAIN_MESSAGE, icon, options, "Medium");
-	Minesweeper.logger.info("Difficulty:\t" + options[difficulty]);
-	
+	try {
+	    Minesweeper.logger.info("Difficulty:\t" + options[difficulty]);
+	} catch (ArrayIndexOutOfBoundsException aioobe) {
+	    return;
+	}
+
 	switch (difficulty) {
 	case 0:
 	    panel = new Panel(9, 9, 10);
@@ -134,12 +138,12 @@ public class Minesweeper {
 	default:
 	    return;
 	}
-	
+
 	Objects.requireNonNull(panel, "panel cannot be null");
 	frame.add(panel);
 	frame.pack();
 	frame.setIconImage(icon_image);
-	frame.setSize(panel.getBoard().getColMax() * 50, (panel.getBoard().getRowMax() + 1) * 50);
+	frame.setSize(panel.getBoard().colMax * 50, (panel.getBoard().rowMax + 1) * 50);
 	frame.setResizable(false);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);

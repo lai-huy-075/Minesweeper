@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Objects;
 
+import main.Minesweeper;
 import main.board.Board;
 import main.board.Panel;
 import main.board.Tile;
@@ -15,19 +16,24 @@ import main.board.Tile;
  * @version 2022 06 03
  */
 public class Mouse implements MouseListener {
-    public final Panel panel;
+    /**
+     * {@link Board} interacting with
+     */
     public final Board board;
+    
+    /**
+     * {@link Tile} interacting with
+     */
     public final Tile tile;
-    
-    
+
     public Mouse(Panel panel, Board board, Tile tile) {
-	this.panel = Objects.requireNonNull(panel, "Panel cannot be null");
 	this.board = Objects.requireNonNull(board, "Board cannot be null");
 	this.tile = Objects.requireNonNull(tile, "Tile cannot be null");
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+	Minesweeper.logger.info("Mouse button:\t" + e.getButton());
 	switch (e.getButton()) {
 	case MouseEvent.BUTTON1:
 	    this.board.reveal(this.tile);
@@ -38,12 +44,9 @@ public class Mouse implements MouseListener {
 	    if (this.board.getGameOver())
 		return;
 	    if (this.tile.isFlagged()) {
-		this.tile.setIcon(null);
-		this.tile.setForeground(null);
 		this.board.incFlagCount();
 		this.tile.toggleFlagged();
 	    } else {
-		this.tile.setIcon(Tile.flag);
 		this.board.decFlagCount();
 		this.tile.toggleFlagged();
 	    }
@@ -67,15 +70,17 @@ public class Mouse implements MouseListener {
     public void mousePressed(MouseEvent e) {
 	if (this.board.getGameOver())
 	    return;
+
 	this.tile.getModel().setPressed(true);
-	this.panel.menu.click();
+	Panel.menu.setIcon(Panel.menuClick);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
 	if (this.board.getGameOver())
 	    return;
+
 	this.tile.getModel().setPressed(false);
-	this.panel.menu.reset();
+	Panel.menu.setIcon(Panel.menuDefault);
     }
 }
