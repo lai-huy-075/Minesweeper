@@ -51,52 +51,53 @@ public class Tile extends JButton {
     private static final Color color = new Color(0xbdbdbd);
 
     static {
-	UIManager.put("TextArea.font", new Font("Arial", Font.PLAIN, 30));
+        UIManager.put("TextArea.font", new Font("Arial", Font.PLAIN, 30));
 
-	for (int i = 1; i < 9; ++i) {
-	    String number;
+        for (int i = 1; i < 9; ++i) {
+            String number;
 
-	    switch (i) {
-	    case 1:
-		number = "one";
-		break;
-	    case 2:
-		number = "two";
-		break;
-	    case 3:
-		number = "three";
-		break;
-	    case 4:
-		number = "four";
-		break;
-	    case 5:
-		number = "five";
-		break;
-	    case 6:
-		number = "six";
-		break;
-	    case 7:
-		number = "seven";
-		break;
-	    case 8:
-		number = "eight";
-		break;
-	    default:
-		number = null;
-		break;
-	    }
+            switch (i) {
+                case 1:
+                    number = "one";
+                    break;
+                case 2:
+                    number = "two";
+                    break;
+                case 3:
+                    number = "three";
+                    break;
+                case 4:
+                    number = "four";
+                    break;
+                case 5:
+                    number = "five";
+                    break;
+                case 6:
+                    number = "six";
+                    break;
+                case 7:
+                    number = "seven";
+                    break;
+                case 8:
+                    number = "eight";
+                    break;
+                default:
+                    number = null;
+                    break;
+            }
 
-	    Image image = new ImageIcon("./src/resources/" + number + ".png").getImage().getScaledInstance(32, 32,
-		    Image.SCALE_SMOOTH);
-	    Tile.numbers[i] = new ImageIcon(image);
-	}
+            Image image = new ImageIcon("./src/resources/" + number + ".png").getImage().getScaledInstance(32, 32,
+                    Image.SCALE_SMOOTH);
+            Tile.numbers[i] = new ImageIcon(image);
+        }
 
-	bomb = new ImageIcon(
-		new ImageIcon("./src/resources/bomb.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
-	incorrectFlag = new ImageIcon(new ImageIcon("./src/resources/incorrectFlag.png").getImage().getScaledInstance(32,
-		32, Image.SCALE_SMOOTH));
-	flag = new ImageIcon(
-		new ImageIcon("./src/resources/flag.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+        bomb = new ImageIcon(
+                new ImageIcon("./src/resources/bomb.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+        incorrectFlag = new ImageIcon(
+                new ImageIcon("./src/resources/incorrectFlag.png").getImage().getScaledInstance(32,
+                        32, Image.SCALE_SMOOTH));
+        flag = new ImageIcon(
+                new ImageIcon("./src/resources/flag.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
     }
 
     /**
@@ -137,62 +138,62 @@ public class Tile extends JButton {
      * @param col   is the {@link #col}
      */
     public Tile(Panel panel, int row, int col) {
-	super(null, null);
+        super(null, null);
 
-	this.row = row;
-	this.col = col;
+        this.row = row;
+        this.col = col;
 
-	// Set Default GUI Elements
-	this.setBorder(BorderFactory.createRaisedBevelBorder());
-	this.setHorizontalAlignment(JButton.CENTER);
-	this.setVerticalAlignment(JButton.CENTER);
-	this.setFocusPainted(false);
+        // Set Default GUI Elements
+        this.setBorder(BorderFactory.createRaisedBevelBorder());
+        this.setHorizontalAlignment(JButton.CENTER);
+        this.setVerticalAlignment(JButton.CENTER);
+        this.setFocusPainted(false);
 
-	this.reset();
+        this.reset();
 
-	// Add Interactivity
-	this.setFocusable(true);
-	this.requestFocusInWindow();
+        // Add Interactivity
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
 
     /**
      * @return {@link #count}
      */
     public int getCount() {
-	return this.count;
+        return this.count;
     }
 
     /**
      * @return {@link Tile#isBomb}
      */
     public boolean isBomb() {
-	return this.isBomb;
+        return this.isBomb;
     }
 
     /**
      * @return {@link Tile#isFlagged}
      */
     public boolean isFlagged() {
-	return this.isFlagged;
+        return this.isFlagged;
     }
 
     /**
      * @return {@link Tile#isRevealed}
      */
     public boolean isRevealed() {
-	return this.isRevealed;
+        return this.isRevealed;
     }
 
     /**
      * Reset Tile
      */
     public void reset() {
-	this.setBorder(BorderFactory.createRaisedBevelBorder());
-	this.isFlagged = false;
-	this.isBomb = false;
-	this.isRevealed = false;
-	this.setIcon(null);
-	this.setBackground(color);
+        this.setBorder(BorderFactory.createRaisedBevelBorder());
+        this.isFlagged = false;
+        this.isBomb = false;
+        this.isRevealed = false;
+        this.setIcon(null);
+        this.setBackground(color);
     }
 
     /**
@@ -201,7 +202,7 @@ public class Tile extends JButton {
      * @param isBomb new {@link #isBomb} value.
      */
     public void setBomb(boolean isBomb) {
-	this.isBomb = isBomb;
+        this.isBomb = isBomb;
     }
 
     /**
@@ -212,8 +213,8 @@ public class Tile extends JButton {
      * @return the new value.
      */
     public int setCount(int count) {
-	this.count = count;
-	return this.count;
+        this.count = count;
+        return this.count;
     }
 
     /**
@@ -222,7 +223,7 @@ public class Tile extends JButton {
      * @param isFlagged new {@link #isFlagged} value.
      */
     public void setFlagged(boolean isFlagged) {
-	this.isFlagged = isFlagged;
+        this.isFlagged = isFlagged;
     }
 
     /**
@@ -231,20 +232,20 @@ public class Tile extends JButton {
      * @param isRevealed new {@link #isRevealed} value.
      */
     public void setRevealed(boolean isRevealed) {
-	this.isRevealed = isRevealed;
+        this.isRevealed = isRevealed;
     }
 
     /**
      * Toggle {@link #isFlagged}
      */
     public void toggleFlagged() {
-	this.isFlagged ^= true;
-	this.setIcon(this.isFlagged ? Tile.flag : null);
-	Minesweeper.logger.info("Flagged set to:\t" + this.isFlagged);
+        this.isFlagged ^= true;
+        this.setIcon(this.isFlagged ? Tile.flag : null);
+        Minesweeper.logger.info("Flagged set to:\t" + this.isFlagged);
     }
 
     @Override
     public String toString() {
-	return String.format("(%d, %d)", this.row, this.col);
+        return String.format("(%d, %d)", this.row, this.col);
     }
 }

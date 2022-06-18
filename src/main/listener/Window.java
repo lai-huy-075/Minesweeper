@@ -7,50 +7,51 @@ import javax.swing.JOptionPane;
 
 import main.Minesweeper;
 
+/**
+ * {@link WindowListener} of the {@link javax.swing.JFrame}
+ */
 public class Window implements WindowListener {
-
     @Override
     public void windowOpened(WindowEvent e) {
-	Minesweeper.logger.info("Window opened");
+        Minesweeper.logger.info("Window opened");
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-	Minesweeper.logger.info("Window closing");
-	
-	switch (JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Careful!",
-		JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null)) {
-	case JOptionPane.YES_OPTION:
-	    System.exit(0);
-	    return;
-	default:
-	    return;
-	}
+        Minesweeper.logger.info("Window closing");
+
+        switch (JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Careful!",
+                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null)) {
+            case JOptionPane.YES_OPTION:
+                System.exit(0);
+                return;
+            default:
+                return;
+        }
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-	Minesweeper.logger.info("Window closed.");
+        Minesweeper.logger.info("Window closed.");
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-	Minesweeper.logger.info("Window iconified.");
+        Minesweeper.logger.info("Window iconified.");
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-	Minesweeper.logger.info("Window deiconified.");
+        Minesweeper.logger.info("Window deiconified.");
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-	Minesweeper.logger.info("Window activated.");
+        Minesweeper.logger.info("Window activated.");
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-	Minesweeper.logger.info("Window deactivated.");
+        Minesweeper.logger.info("Window deactivated.");
     }
-
 }

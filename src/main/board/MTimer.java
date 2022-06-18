@@ -27,8 +27,8 @@ public class MTimer extends Timer {
      * @throws NullPointerException if {@link Timer#Timer(String)} throws
      */
     public MTimer() throws NullPointerException {
-	super("Timer");
-	this.time = 0;
-	this.isRunning = false;
+        super("Timer");
+        this.time = 0;
+        this.isRunning = false;
     }
 }

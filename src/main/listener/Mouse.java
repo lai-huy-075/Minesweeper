@@ -16,71 +16,77 @@ import main.board.Tile;
  * @version 2022 06 03
  */
 public class Mouse implements MouseListener {
-    /**
-     * {@link Board} interacting with
-     */
-    public final Board board;
-    
-    /**
-     * {@link Tile} interacting with
-     */
-    public final Tile tile;
+	/**
+	 * {@link Board} interacting with
+	 */
+	public final Board board;
 
-    public Mouse(Panel panel, Board board, Tile tile) {
-	this.board = Objects.requireNonNull(board, "Board cannot be null");
-	this.tile = Objects.requireNonNull(tile, "Tile cannot be null");
-    }
+	/**
+	 * {@link Tile} interacting with
+	 */
+	public final Tile tile;
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-	Minesweeper.logger.info("Mouse button:\t" + e.getButton());
-	switch (e.getButton()) {
-	case MouseEvent.BUTTON1:
-	    this.board.reveal(this.tile);
-	    return;
-	case MouseEvent.BUTTON3:
-	    if (this.tile.isRevealed())
-		return;
-	    if (this.board.getGameOver())
-		return;
-	    if (this.tile.isFlagged()) {
-		this.board.incFlagCount();
-		this.tile.toggleFlagged();
-	    } else {
-		this.board.decFlagCount();
-		this.tile.toggleFlagged();
-	    }
-	    return;
-	default:
-	    return;
+	/**
+	 * Constructor
+	 * @param panel {@link Panel} this is interacting with
+	 * @param board {@link Board} this is interacting with
+	 * @param tile {@link Tile} this is interacting with
+	 */
+	public Mouse(Panel panel, Board board, Tile tile) {
+		this.board = Objects.requireNonNull(board, "Board cannot be null");
+		this.tile = Objects.requireNonNull(tile, "Tile cannot be null");
 	}
-    }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-	return;
-    }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Minesweeper.logger.info("Mouse button:\t" + e.getButton());
+		switch (e.getButton()) {
+			case MouseEvent.BUTTON1:
+				this.board.reveal(this.tile);
+				return;
+			case MouseEvent.BUTTON3:
+				if (this.tile.isRevealed())
+					return;
+				if (this.board.getGameOver())
+					return;
+				if (this.tile.isFlagged()) {
+					this.board.incFlagCount();
+					this.tile.toggleFlagged();
+				} else {
+					this.board.decFlagCount();
+					this.tile.toggleFlagged();
+				}
+				return;
+			default:
+				return;
+		}
+	}
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-	return;
-    }
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		return;
+	}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-	if (this.board.getGameOver())
-	    return;
+	@Override
+	public void mouseExited(MouseEvent e) {
+		return;
+	}
 
-	this.tile.getModel().setPressed(true);
-	Panel.menu.setIcon(Panel.menuClick);
-    }
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (this.board.getGameOver())
+			return;
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-	if (this.board.getGameOver())
-	    return;
+		this.tile.getModel().setPressed(true);
+		Panel.menu.setIcon(Panel.menuClick);
+	}
 
-	this.tile.getModel().setPressed(false);
-	Panel.menu.setIcon(Panel.menuDefault);
-    }
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (this.board.getGameOver())
+			return;
+
+		this.tile.getModel().setPressed(false);
+		Panel.menu.setIcon(Panel.menuDefault);
+	}
 }

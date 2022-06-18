@@ -7,14 +7,11 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -96,67 +93,38 @@ public class Panel extends JPanel implements ActionListener {
 
     static {
         String filename = "./src/resources/menuDefault.png";
-        File file = new File(filename);
+        File file;
         URL url;
         ReadableByteChannel rbc;
         FileOutputStream fout;
 
-        if (!file.exists()) {
-            Minesweeper.logger.info(file.getName() + " created");
-            try {
-                file.createNewFile();
-                url = new URL("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/menuDefault.png");
-                rbc = Channels.newChannel(url.openStream());
-                fout = new FileOutputStream(file);
-                fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            } catch (IOException ioe) {
-                Minesweeper.logger.throwing("Panel", "static", ioe);
-            }
-        } else {
-            Minesweeper.logger.info(file.getName() + " exists");
-        }
+        for (String png : new String[] {"Default", "Click", "GameOver"}) {
+            filename = String.format("./src/resources/menu%s.png", png);
+            file = new File(filename);
 
-        filename = "./src/resources/menuClick.png";
-        file = new File(filename);
-        if (!file.exists()) {
-            Minesweeper.logger.info(file.getName() + " created");
-            try {
-                file.createNewFile();
-                url = new URL("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/menuClick.png");
-                rbc = Channels.newChannel(url.openStream());
-                fout = new FileOutputStream(file);
-                fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            } catch (IOException ioe) {
-                Minesweeper.logger.throwing("Panel", "static", ioe);
+            if (!file.exists()) {
+                Minesweeper.logger.info(file.getName() + " created");
+                try {
+                    file.createNewFile();
+                    url = new URL(String.format("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/menu%s.png", png));
+                    rbc = Channels.newChannel(url.openStream());
+                    fout = new FileOutputStream(file);
+                    fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                } catch (IOException ioe) {
+                    Minesweeper.logger.throwing("Panel", "static", ioe);
+                }
+            } else {
+                Minesweeper.logger.info(file.getName() + " exists");
             }
-        } else {
-            Minesweeper.logger.info(file.getName() + " exists");
-        }
-
-        filename = "./src/resources/menuDefault.png";
-        file = new File(filename);
-        if (!file.exists()) {
-            Minesweeper.logger.info(file.getName() + " created");
-            try {
-                file.createNewFile();
-                url = new URL("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/menuDefault.png");
-                rbc = Channels.newChannel(url.openStream());
-                fout = new FileOutputStream(file);
-                fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            } catch (IOException ioe) {
-                Minesweeper.logger.throwing("Panel", "static", ioe);
-            }
-        } else {
-            Minesweeper.logger.info(file.getName() + " exists");
         }
 
         menuDefault = new ImageIcon(
-                new ImageIcon("./src/resources/menuDefault.png").getImage().getScaledInstance(32, 32,
+                new ImageIcon(filename).getImage().getScaledInstance(32, 32,
                         Image.SCALE_SMOOTH));
         menuClick = new ImageIcon(
-                new ImageIcon("./src/resources/menuClick.png").getImage().getScaledInstance(32, 32,
+                new ImageIcon(filename).getImage().getScaledInstance(32, 32,
                         Image.SCALE_SMOOTH));
-        menuGameOver = new ImageIcon(new ImageIcon("./src/resources/menuGameOver.png").getImage().getScaledInstance(32,
+        menuGameOver = new ImageIcon(new ImageIcon(filename).getImage().getScaledInstance(32,
                 32, Image.SCALE_SMOOTH));
 
         menu = new JButton(menuDefault);
@@ -191,13 +159,7 @@ public class Panel extends JPanel implements ActionListener {
         }
 
         this.setLayout(new GridLayout(row + 1, col));
-
-        UIManager.put("OptionPane.messageFont", standardFont);
-        UIManager.put("OptionPane.buttonFont", standardFont);
-        UIManager.put("Label.font", standardFont);
-        UIManager.put("Label.background", null);
-        UIManager.put("Label.foreground", Color.BLACK);
-
+        this.setGUIElements();
         this.keys = new Key(this);
 
         // Create other GUI Elements
@@ -247,6 +209,9 @@ public class Panel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Display menu
+     */
     public void displayMenu() {
         switch (JOptionPane.showOptionDialog(this, "Pick an option", "Menu", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE, Minesweeper.icon, options, "Reset")) {
@@ -297,6 +262,17 @@ public class Panel extends JPanel implements ActionListener {
      */
     public JLabel getTimeLabel() {
         return this.timeLabel;
+    }
+
+    /**
+     * Set default GUI Elements through {@link UIManager#put(Object, Object)}
+     */
+    private void setGUIElements() {
+        UIManager.put("OptionPane.messageFont", standardFont);
+        UIManager.put("OptionPane.buttonFont", standardFont);
+        UIManager.put("Label.font", standardFont);
+        UIManager.put("Label.background", null);
+        UIManager.put("Label.foreground", Color.BLACK);
     }
 
     /**
