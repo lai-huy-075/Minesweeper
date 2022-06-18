@@ -3,7 +3,12 @@ package main;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -64,6 +69,21 @@ public class Minesweeper {
 		logger.setLevel(Level.ALL);
 		logger.setUseParentHandlers(false);
 		logger.addHandler(file);
+
+		File f = new File("./src/resources/icon.png");
+		if (!f.exists()) {
+			f.mkdirs();
+			try {
+				f.createNewFile();
+				URL url = new URL("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/icon.png");
+				ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+				FileOutputStream fout = new FileOutputStream(f);
+				fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+				fout.close();
+			} catch (IOException ioe) {
+				logger.throwing("Minesweeper", "static", ioe);
+			}
+		}
 
 		icon = new ImageIcon("./src/resources/icon.png");
 		icon_image = icon.getImage();

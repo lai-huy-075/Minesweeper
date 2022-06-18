@@ -110,6 +110,7 @@ public class Panel extends JPanel implements ActionListener {
                     rbc = Channels.newChannel(url.openStream());
                     fout = new FileOutputStream(file);
                     fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    fout.close();
                 } catch (IOException ioe) {
                     Minesweeper.logger.throwing("Panel", "static", ioe);
                 }

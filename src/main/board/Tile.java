@@ -3,6 +3,12 @@ package main.board;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -82,13 +88,51 @@ public class Tile extends JButton {
                     number = "eight";
                     break;
                 default:
-                    number = null;
+                    number = "";
                     break;
             }
 
-            Image image = new ImageIcon("./src/resources/" + number + ".png").getImage().getScaledInstance(32, 32,
+            String filename = String.format("./src/resources/%s.png", number);
+            File file = new File(filename);
+            if (!file.exists()) {
+                Minesweeper.logger.info(file.getName() + " created");
+                try {
+                    file.createNewFile();
+                    URL url = new URL(String.format("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/%s.png", number));
+                    ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+                    FileOutputStream fout = new FileOutputStream(file);
+                    fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    fout.close();
+                } catch (IOException ioe) {
+                    Minesweeper.logger.throwing("Tile", "static", ioe);
+                }
+            } else {
+                Minesweeper.logger.info(file.getName() + " exists");
+            }
+
+            Image image = new ImageIcon(filename).getImage().getScaledInstance(32, 32,
                     Image.SCALE_SMOOTH);
             Tile.numbers[i] = new ImageIcon(image);
+        }
+
+        for (String png : new String[] {"bomb", "incorrectFlag", "flag"}) {
+            String filename = String.format("./src/resources/%s.png", png);
+            File file = new File(filename);
+            if (!file.exists()) {
+                Minesweeper.logger.info(file.getName() + " created");
+                try {
+                    file.createNewFile();
+                    URL url = new URL(String.format("https://raw.githubusercontent.com/MrPineapple065/Minesweeper/master/src/resources/%s.png", png));
+                    ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+                    FileOutputStream fout = new FileOutputStream(file);
+                    fout.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    fout.close();
+                } catch (IOException ioe) {
+                    Minesweeper.logger.throwing("Tile", "static", ioe);
+                }
+            } else {
+                Minesweeper.logger.info(file.getName() + " exists");
+            }
         }
 
         bomb = new ImageIcon(
