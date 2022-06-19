@@ -59,6 +59,12 @@ public class Board {
     private MTimer timer = new MTimer();
 
     /**
+     * A boolean determine if the first click has been used.<br>
+     * This guarentees that the first click is not a bomb.
+     */
+    private boolean firstClick;
+
+    /**
      * A boolean determining if the game is over.
      */
     private boolean isGameOver;
@@ -244,6 +250,7 @@ public class Board {
             this.setTimer();
 
         this.isGameOver = false;
+        this.firstClick = true;
         this.numFlag = this.numBombs;
         this.numReveal = 0;
 
@@ -275,6 +282,23 @@ public class Board {
             return;
 
         Minesweeper.logger.info("Reaveal tile:\t" + tile.toString());
+
+        if (this.firstClick) {
+            Minesweeper.logger.info("Guaranteeing that first click is not a bomb");
+            this.firstClick = false;
+
+            if (tile.isBomb()) {
+                tile.setBomb(false);
+                int x = rand.nextInt(this.colMax), y = rand.nextInt(this.rowMax);
+                while ((tile.row == x && tile.col == y) || this.board[x][y].isBomb()) {
+                    x = rand.nextInt(this.colMax);
+                    y = rand.nextInt(this.rowMax);
+                }
+
+                Minesweeper.logger.info("Placing the bomb at " + this.board[x][y].toString());
+                this.board[x][y].setBomb(true);
+            }
+        }
 
         if (tile.isBomb()) {
             JOptionPane.showMessageDialog(null, "Game Over", "Game Over!", JOptionPane.PLAIN_MESSAGE, Minesweeper.icon);

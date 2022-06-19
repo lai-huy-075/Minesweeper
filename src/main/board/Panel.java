@@ -92,7 +92,7 @@ public class Panel extends JPanel implements ActionListener {
     public final Board board;
 
     static {
-        String filename = "./src/resources/menuDefault.png";
+        String filename;
         File file;
         URL url;
         ReadableByteChannel rbc;
@@ -120,12 +120,12 @@ public class Panel extends JPanel implements ActionListener {
         }
 
         menuDefault = new ImageIcon(
-                new ImageIcon(filename).getImage().getScaledInstance(32, 32,
+                new ImageIcon("./src/resources/menuDefault.png").getImage().getScaledInstance(32, 32,
                         Image.SCALE_SMOOTH));
         menuClick = new ImageIcon(
-                new ImageIcon(filename).getImage().getScaledInstance(32, 32,
+                new ImageIcon("./src/resources/menuClick.png").getImage().getScaledInstance(32, 32,
                         Image.SCALE_SMOOTH));
-        menuGameOver = new ImageIcon(new ImageIcon(filename).getImage().getScaledInstance(32,
+        menuGameOver = new ImageIcon(new ImageIcon("./src/resources/menuGameOver.png").getImage().getScaledInstance(32,
                 32, Image.SCALE_SMOOTH));
 
         menu = new JButton(menuDefault);
@@ -166,6 +166,9 @@ public class Panel extends JPanel implements ActionListener {
         // Create other GUI Elements
         this.createLabels();
         this.createTiles();
+
+        menu.addActionListener(this);
+        menu.addKeyListener(this.keys);
     }
 
     @Override

@@ -54,18 +54,23 @@ public class Minesweeper {
 	 */
 	public static final Image icon_image;
 
+	/**
+	 * {@link javafx.scene.text.Font} for {@link UIManager#put(Object, Object)}
+	 */
+	private static final Font arial = new Font("Arial", Font.PLAIN, 20);
+
 	static {
 		FileHandler file = null;
 		try {
 			file = new FileHandler("./out.log", false);
 		} catch (final SecurityException e) {
-			Minesweeper.logger.throwing("Chess", "static", e);
+			Minesweeper.logger.throwing("Minesweeper", "static", e);
 		} catch (final IOException e) {
-			Minesweeper.logger.throwing("Chess", "static", e);
+			Minesweeper.logger.throwing("Minesweeper", "static", e);
 		}
 		file.setFormatter(new CustomFormatter());
 
-		logger = Logger.getLogger("Chess");
+		logger = Logger.getLogger("Minesweeper");
 		logger.setLevel(Level.ALL);
 		logger.setUseParentHandlers(false);
 		logger.addHandler(file);
@@ -101,7 +106,7 @@ public class Minesweeper {
 		Panel panel = null;
 
 		final int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "", JOptionPane.OK_OPTION,
-				JOptionPane.PLAIN_MESSAGE, icon, options, "Medium");
+				JOptionPane.PLAIN_MESSAGE, icon, options, "Intermediate");
 		try {
 			Minesweeper.logger.info("Difficulty:\t" + options[difficulty]);
 		} catch (ArrayIndexOutOfBoundsException aioobe) {
@@ -122,8 +127,8 @@ public class Minesweeper {
 				JPanel jp = new JPanel();
 				jp.setLayout(new GridLayout(3, 2));
 
-				UIManager.put("Label.font", new Font("Arial", Font.PLAIN, 20));
-				UIManager.put("TextField.font", new Font("Arial", Font.PLAIN, 20));
+				UIManager.put("Label.font", arial);
+				UIManager.put("TextField.font", arial);
 
 				JTextField row = new JTextField(10), col = new JTextField(10), bomb = new JTextField(10);
 
@@ -139,7 +144,7 @@ public class Minesweeper {
 				boolean fail = true;
 
 				while (fail) {
-					switch (JOptionPane.showConfirmDialog(null, jp, "", JOptionPane.OK_CANCEL_OPTION)) {
+					switch (JOptionPane.showConfirmDialog(null, jp, "", JOptionPane.OK_OPTION, JOptionPane.QUESTION_MESSAGE, icon)) {
 						case JOptionPane.OK_OPTION:
 							try {
 								panel = new Panel(Integer.parseInt(row.getText()), Integer.parseInt(col.getText()),
